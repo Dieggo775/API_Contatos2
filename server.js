@@ -9,11 +9,11 @@ import express from 'express'
 
     users.push(req.body)
     
-    res.send('ok post')
+    res.status(201).json(req.body)
  })
 
  app.get('/usuarios', (req, res) => {
-    res.json(users)
+    res.status(200).json(users)
  })
 
  app.listen(3000)
