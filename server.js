@@ -17,3 +17,9 @@ import express from 'express'
  })
 
  app.listen(3000)
+
+ /*
+ Mongo DB
+ db_user
+ eCzTR160Z7K3VicZ
+ */
