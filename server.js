@@ -1,25 +1,42 @@
+import 'dotenv/config'
 import express from 'express'
+import pkg from '@prisma/client'
 
- const app = express()
- app.use(express.json())
+const { PrismaClient } = pkg
+const prisma = new PrismaClient()
+const app = express()
+app.use(express.json())
 
- const users = []
+app.post('/usuarios', async (req, res) => {
+  try {
+    const { email, name, age } = req.body
+    const user = await prisma.user.create({
+      data: { email, name, age }
+    })
+    res.status(201).json(user)
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+})
 
- app.post('/usuarios', (req, res) => {
-
-    users.push(req.body)
-    
-    res.status(201).json(req.body)
- })
-
- app.get('/usuarios', (req, res) => {
+app.get('/usuarios', async (req, res) => {
+  try {
+    const users = await prisma.user.findMany()
     res.status(200).json(users)
- })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
 
- app.listen(3000)
+const PORT = process.env.PORT || 3000
+const server = app.listen(PORT, () => {
+  console.log(`Servidor rodando em http://localhost:${PORT}`)
+})
 
- /*
- Mongo DB
- db_user
- eCzTR160Z7K3VicZ
- */
+server.on('error', (error) => {
+  if (error.code === 'EADDRINUSE') {
+    console.error(`Porta ${PORT} já está em uso. Altere a variável PORT ou pare o outro processo.`)
+  } else {
+    console.error(error)
+  }
+})
