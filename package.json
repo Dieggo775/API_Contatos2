@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Dieggo775/API_Contatos2#readme",
   "dependencies": {
+    "@prisma/client": "^7.8.0",
     "express": "^5.2.1"
   },
   "devDependencies": {
