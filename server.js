@@ -28,6 +28,33 @@ app.get('/usuarios', async (req, res) => {
   }
 })
 
+app.put('/usuarios/:id', async (req, res) => {
+  try {
+    const id = Number(req.params.id)
+    if (Number.isNaN(id)) {
+      return res.status(400).json({ error: 'ID inválido' })
+    }
+
+    const { email, name, age } = req.body
+    const data = {}
+    if (email !== undefined) data.email = email
+    if (name !== undefined) data.name = name
+    if (age !== undefined) data.age = age
+
+    if (Object.keys(data).length === 0) {
+      return res.status(400).json({ error: 'Nenhum campo para atualizar' })
+    }
+
+    const user = await prisma.user.update({
+      where: { id },
+      data
+    })
+    res.status(200).json(user)
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+})
+
 const PORT = process.env.PORT || 3000
 const server = app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`)
